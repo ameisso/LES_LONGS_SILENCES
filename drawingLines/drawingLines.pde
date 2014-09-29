@@ -1,7 +1,8 @@
 final int SCREEN_WIDTH  = 1024;
 final int SCREEN_HEIGHT = 768;
 
-Line test;
+
+ArrayList<Line> lines;
 //Syphon
 import codeanticode.syphon.*;
 PGraphics canvas;
@@ -11,17 +12,30 @@ void setup() {
   size(SCREEN_WIDTH, SCREEN_HEIGHT, P2D);
   canvas = createGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, P2D);
   server = new SyphonServer(this, "plans");
-  test = new Line(0,0,width/2,height,100);
+  lines = new ArrayList<Line>(); 
+  lines.add  (new Line(100, 100, 500, 100, 0, 2));
+  lines.add  (new Line(500, 100, 500, 500, 3, 4));
+  lines.add  (new Line(500, 500, 100, 500, 4, 5));
+  lines.add  (new Line(100, 500, 100, 100, 5, 6));
+  lines.add  (new Line(500, 100, 800, 100, 4, 5));
+  lines.add  (new Line(800, 100, 800, 200, 5, 6));
+  lines.add  (new Line(800, 200, 600, 200, 4, 5));
+  lines.add  (new Line(800, 100, 800, 200, 5, 6));
+  lines.add  (new Line(800, 200, 600, 200, 4, 5));
+  lines.add  (new Line(800, 200, 800, 600, 4, 5));
 }
 
 void draw() {
   canvas.beginDraw();
   canvas.background(0);
-  canvas.stroke(255);
-  canvas.strokeWeight(10.0);
-  canvas.strokeJoin(MITER);
-  test.draw();
 
+  canvas.strokeWeight(3.0);
+  canvas.strokeCap(PROJECT);
+
+  for (int i = lines.size ()-1; i >= 0; i--) {
+    Line line = lines.get(i);
+    line.draw();
+  }
 
   canvas.endDraw();
   image(canvas, 0, 0);
