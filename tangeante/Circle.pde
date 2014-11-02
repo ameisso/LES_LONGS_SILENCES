@@ -9,7 +9,7 @@ class Circle
   boolean isLineAppearing = false;
   float drawingDuration = 10000;
   float lineStroke = 0;
-  
+
   Circle(PVector center, float aRadius)
   {
     this.position = center; 
@@ -49,7 +49,9 @@ class Circle
     if (shouldDraw)
     {
       lineStroke = (millis()-startApparitionDate)/drawingDuration*255;
-      canvas.stroke(lineStroke);
+      //canvas.stroke(lineStroke);
+      //restora when not blinking 
+      canvas.stroke(255);
       canvas.line(mousePosition.x, mousePosition.y, endPoint.x, endPoint.y);
 
       if  ((millis()-startApparitionDate)>drawingDuration)
@@ -63,11 +65,15 @@ class Circle
   {
     PVector selfVector = new PVector (endPoint.x-mousePosition.x, endPoint.y-mousePosition.y);
     PVector otherVector = new PVector (testedCircle.endPoint.x-mousePosition.x, testedCircle.endPoint.y-mousePosition.y);
-    if (PVector.angleBetween(selfVector, otherVector)< 1*PI/180.0)
+    if (PVector.angleBetween(selfVector, otherVector)< 3*PI/180.0)
     {
-      shouldDraw = true;
-      startApparitionDate = millis();
-      isLineAppearing = true;
+      if (selfVector.mag() < 300 && otherVector.mag() < 300)
+      {
+        shouldDraw = true;
+        startApparitionDate = millis();
+        //restore when not blinking
+        //isLineAppearing = true;
+      }
     }
   }
 }

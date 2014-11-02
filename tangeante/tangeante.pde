@@ -14,22 +14,7 @@ void setup() {
   canvas = createGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, P2D);
   server = new SyphonServer(this, "baseProject");
   circles = new ArrayList<Circle>(); 
-  circles.add(new Circle(new PVector(100, 200), 50));
-  circles.add(new Circle(new PVector(700, 500), 75));
-  circles.add(new Circle(new PVector(800, 700), 75));
-  circles.add(new Circle(new PVector(300, 300), 100));
-  circles.add(new Circle(new PVector(500, 600), 100));
-  circles.add(new Circle(new PVector(900, 300), 100));
-  circles.add(new Circle(new PVector(400, 80), 75));
-  circles.add(new Circle(new PVector(730, 100), 75));
-  circles.add(new Circle(new PVector(140, 640), 75));
-  circles.add(new Circle(new PVector(600, 280), 75));
-  circles.add(new Circle(new PVector(280, 500), 20));
-  circles.add(new Circle(new PVector(320, 680), 75));
-  circles.add(new Circle(new PVector(470, 420), 60));
-  circles.add(new Circle(new PVector(130, 400), 80));
-  circles.add(new Circle(new PVector(470, 215), 75));
-  circles.add(new Circle(new PVector(900, 550), 75));
+  initCircles();
 }
 
 void draw() 
@@ -74,4 +59,48 @@ void draw()
   server.sendImage(canvas);
   //println(mouseX, mouseY);
 } 
+
+void keyPressed()
+{
+  if (key == 'r')
+  {
+    initCircles();
+  }
+}
+void initCircles()
+{
+  circles.clear();
+  /* circles.add(new Circle(new PVector(100, 200), 50));
+   circles.add(new Circle(new PVector(700, 500), 75));
+   circles.add(new Circle(new PVector(800, 700), 75));
+   circles.add(new Circle(new PVector(300, 300), 100));
+   circles.add(new Circle(new PVector(500, 600), 100));
+   circles.add(new Circle(new PVector(900, 300), 100));
+   circles.add(new Circle(new PVector(400, 80), 75));
+   circles.add(new Circle(new PVector(730, 100), 75));
+   circles.add(new Circle(new PVector(140, 640), 75));
+   circles.add(new Circle(new PVector(600, 280), 75));
+   circles.add(new Circle(new PVector(280, 500), 20));
+   circles.add(new Circle(new PVector(320, 680), 75));
+   circles.add(new Circle(new PVector(470, 420), 60));
+   circles.add(new Circle(new PVector(130, 400), 80));
+   circles.add(new Circle(new PVector(470, 215), 75));
+   circles.add(new Circle(new PVector(900, 550), 75));*/
+
+  int circleMaxSize = 100;
+  int circleMinSize = 50;
+  int circleMaxStep = 60;
+  float circlesDensity = 0.4;
+  for (int i = 0; i < width; i+= random (circleMaxSize, circleMaxStep))
+  {
+    for (int j = 0; j < height; j+= random (circleMaxSize, circleMaxStep))
+    {
+      float circleSize = random(circleMinSize-circlesDensity*circleMinSize, circleMaxSize );
+      if (circleSize > circleMinSize)
+      {
+        circles.add(new Circle(new PVector(i, j), circleSize));
+      }
+    }
+  }
+}
 
