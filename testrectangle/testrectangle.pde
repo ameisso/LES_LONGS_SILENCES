@@ -1,28 +1,107 @@
+//TODO : the balls shouldnt be affected by the movement of the rectangle 
+
+
+final int SCREEN_WIDTH  = 1024;
+final int SCREEN_HEIGHT = 768;
+
+//Syphon
+import codeanticode.syphon.*;
+PGraphics canvas;
+SyphonServer server;
+
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscP5;
+
+float angle = 0;
+Ball ball;
+Ball ball2;
+
+int rectWidth = 500; 
+int rectHeight = 500;
+int originalRectWidth = rectWidth;
+int originalRectHeight = rectHeight;
+int rectExtension = 10;
+float timeRectWasExtended = -1;
+ArrayList<Ball> balls;
+
 void setup() 
 {  
-  size(800, 600, P2D);
+  size(SCREEN_WIDTH, SCREEN_HEIGHT, P2D);
+  canvas = createGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, P2D);
+  server = new SyphonServer(this, "rectangle");
+  oscP5 = new OscP5(this, 9999);
+
+  balls = new ArrayList<Ball>(); 
+  balls.add  (new Ball(float(mouseX), float(mouseY), 20));
+  balls.add  (new Ball(float(mouseX+75), float(mouseY+75), 10));
+  //balls.add  (new Ball(float(mouseX-75), float(mouseY+75), 10));
 }
 void draw() 
 {
-  background(0);
-  float angle = 2*PI/6;
-  pushMatrix();
-  rectMode(CENTER);
-  strokeWeight(10);
-  noFill();
-  stroke(100);
-      translate(mouseX, mouseY);
-  rotate(angle);
-  //rect (mouseX, mouseY, 200, 300);
-  for (int i = 0 ; i < 10 ; i++)
+  
+  if (millis() - timeRectWasExtended > 50 && timeRectWasExtended>0)
   {
-    float roatateForce = 0.005;
-
-    rotate(+random(-roatateForce, roatateForce));
-    rect (random(3), random(3), 200, 300);
+    rectWidth -= rectExtension;
+    rectHeight -= rectExtension;
+    timeRectWasExtended = -1;
   }
-  popMatrix();
-  line(100, 0, 100, 100);
-  // rotate(-PI/2);
+  canvas.beginDraw();
+  canvas.background(0);
+  canvas.pushMatrix();
+  canvas.rectMode(CENTER);
+  canvas.strokeWeight(2);
+  canvas.noFill();
+  canvas.translate(mouseX, mouseY);
+  canvas.rotate(angle);
+
+  for (int i = balls.size ()-1; i >= 0; i--)
+  {
+    Ball ball = balls.get(i);
+    ball.checkCollisionwithRect(0, 0, originalRectWidth, originalRectHeight); 
+    for (int j = balls.size ()-1; j >= 0; j--)
+    {   
+      if (i != j)
+      {
+        Ball ball2 = balls.get(j);
+        ball.checkCollision(ball2);
+      }
+    }
+    ball.update();
+    ball.display();
+  }
+
+
+  for (int i = 0; i < 10; i++)
+  {
+    float rotateForce = 0.005;
+    canvas.rotate(+random(-rotateForce, rotateForce));
+    canvas.stroke(255);
+    canvas.noFill();
+    canvas.rect (random(3), random(3), rectWidth, rectHeight);
+  }
+
+  canvas.popMatrix();
+  canvas.endDraw();
+  image(canvas, 0, 0);
+  server.sendImage(canvas);
 }
+
+
+void oscEvent(OscMessage theOscMessage)
+{
+  if (theOscMessage.addrPattern().equals("/rotation"))
+  {
+    angle += theOscMessage.get(0).floatValue()/20.0;
+    println(" "+angle);
+  }
+  
+  if (theOscMessage.addrPattern().equals("/millumin/composition/cue"))
+  {
+    rectWidth += rectExtension;
+    rectHeight += rectExtension;
+    timeRectWasExtended = millis();
+  }
+} 
 

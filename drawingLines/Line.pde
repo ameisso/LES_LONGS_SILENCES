@@ -27,9 +27,10 @@ class Line {
   void draw()
   {
     PVector v = getEndPoint();
-      canvas.stroke((millis()-startDate)/drawingDuration*255);
+    canvas.stroke((millis()-startDate)/drawingDuration*255);
     canvas.line(startPoint.x, startPoint.y, v.x, v.y);
   }
+  
   PVector getEndPoint()
   {
     if (millis() < startDate)

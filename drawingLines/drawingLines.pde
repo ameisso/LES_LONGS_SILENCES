@@ -1,5 +1,5 @@
-final int SCREEN_WIDTH  = 1024;
-final int SCREEN_HEIGHT = 768;
+final int SCREEN_WIDTH  = 800;
+final int SCREEN_HEIGHT = 800;
 
 
 ArrayList<Line> lines;
@@ -27,6 +27,7 @@ void setup() {
   lines.add  (new Line(800, 200, 800, 600, 4, 5));
   lines.add  (new Line(800, 600, 100, 600, 4, 5));
   lines.add  (new Line(100, 600, 140, 530, 4, 5));
+  lines.add  (new Line(100, 600, 200, 530, 4, 5));
 }
 
 void draw() {

@@ -37,8 +37,8 @@ void draw()
     Circle circle = circles.get(i);
 
     circle.displayLine(new PVector(mouseX, mouseY));
-    canvas.fill(255);
-        circle.display();
+    canvas.fill(0);
+    circle.display();
   }
 
   canvas.endDraw();

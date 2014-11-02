@@ -11,6 +11,7 @@ class Circle
 
   void display()
   {
+    fill(0);
     canvas.ellipse(position.x, position.y, radius, radius);
   }
 
