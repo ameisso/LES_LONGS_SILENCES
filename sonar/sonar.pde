@@ -32,10 +32,10 @@ void draw()
   canvas.stroke(255);
   canvas.strokeWeight(8);
   canvas.translate (width/2, height/2);
-  for (int i = 0; i < 4; i++)
+  for (int i = 0; i < 2; i++)
   {
     canvas.rotate(speed);
-    speed+=0.001;
+    speed+=0.01;
     canvas.line(0, 0, 0, 298);
   }
 
