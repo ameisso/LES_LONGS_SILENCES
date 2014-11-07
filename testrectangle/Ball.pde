@@ -62,9 +62,9 @@ class Ball
 
       PVector[] bFinal = {
         new PVector(), new PVector()
-      };
+        };
 
-      bFinal[0].x = cosine * bTemp[0].x - sine * bTemp[0].y;
+        bFinal[0].x = cosine * bTemp[0].x - sine * bTemp[0].y;
       bFinal[0].y = cosine * bTemp[0].y + sine * bTemp[0].x;
       bFinal[1].x = cosine * bTemp[1].x - sine * bTemp[1].y;
       bFinal[1].y = cosine * bTemp[1].y + sine * bTemp[1].x;
@@ -86,16 +86,21 @@ class Ball
     if  (position.x > centerX+rectWidth/2.0-r || position.x < centerX - rectWidth/2.0 + r)
     {
       velocity.x *= -1;
+      player.rewind();
+      player.play();
     }
     if  (position.y > centerY+rectHeight/2.0-r || position.y < centerY - rectHeight/2.0 + r)
     {
       velocity.y *= -1;
+      player.rewind();
+      player.play();
     }
   }
   void display() {
     canvas.noStroke();
     canvas.fill(50);
-    canvas.ellipse(position.x, position.y, r*2, r*2);
+    //canvas.ellipse(position.x, position.y, r*2, r*2);
+    canvas.rect(position.x, position.y, r*2, r*2);
   }
 }
 

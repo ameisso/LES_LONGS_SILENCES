@@ -9,16 +9,21 @@ import codeanticode.syphon.*;
 PGraphics canvas;
 SyphonServer server;
 
+//OSC
 import oscP5.*;
 import netP5.*;
-
 OscP5 oscP5;
 
+//Sound 
+import ddf.minim.*;
+Minim minim;
+AudioPlayer player;
+
+//General 
 float angle = 0;
 PVector position;
 Ball ball;
 Ball ball2;
-
 int rectWidth = 300; 
 int rectHeight = 200;
 int originalRectWidth = rectWidth;
@@ -38,10 +43,10 @@ void setup()
   
   balls = new ArrayList<Ball>(); 
   balls.add  (new Ball(position.x, position.y, 20));
-  balls.add  (new Ball(position.x+75, position.y+75, 10));
-  
 
-  //balls.add  (new Ball(float(mouseX-75), float(mouseY+75), 10));
+  minim = new Minim(this);
+  player = minim.loadFile("bip.wav");
+ 
 }
 void draw() 
 {
