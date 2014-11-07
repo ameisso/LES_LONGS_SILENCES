@@ -15,11 +15,12 @@ import netP5.*;
 OscP5 oscP5;
 
 float angle = 0;
+PVector position;
 Ball ball;
 Ball ball2;
 
-int rectWidth = 500; 
-int rectHeight = 500;
+int rectWidth = 300; 
+int rectHeight = 200;
 int originalRectWidth = rectWidth;
 int originalRectHeight = rectHeight;
 int rectExtension = 10;
@@ -33,14 +34,18 @@ void setup()
   server = new SyphonServer(this, "rectangle");
   oscP5 = new OscP5(this, 9999);
 
+  position = new PVector(0,0);
+  
   balls = new ArrayList<Ball>(); 
-  balls.add  (new Ball(float(mouseX), float(mouseY), 20));
-  balls.add  (new Ball(float(mouseX+75), float(mouseY+75), 10));
+  balls.add  (new Ball(position.x, position.y, 20));
+  balls.add  (new Ball(position.x+75, position.y+75, 10));
+  
+
   //balls.add  (new Ball(float(mouseX-75), float(mouseY+75), 10));
 }
 void draw() 
 {
-  
+
   if (millis() - timeRectWasExtended > 50 && timeRectWasExtended>0)
   {
     rectWidth -= rectExtension;
@@ -53,7 +58,7 @@ void draw()
   canvas.rectMode(CENTER);
   canvas.strokeWeight(2);
   canvas.noFill();
-  canvas.translate(mouseX, mouseY);
+  canvas.translate(position.x, position.y);
   canvas.rotate(angle);
 
   for (int i = balls.size ()-1; i >= 0; i--)
@@ -73,7 +78,7 @@ void draw()
   }
 
 
-  for (int i = 0; i < 10; i++)
+  for (int i = 0; i < 1; i++)
   {
     float rotateForce = 0.005;
     canvas.rotate(+random(-rotateForce, rotateForce));
@@ -94,9 +99,13 @@ void oscEvent(OscMessage theOscMessage)
   if (theOscMessage.addrPattern().equals("/rotation"))
   {
     angle += theOscMessage.get(0).floatValue()/20.0;
-    println(" "+angle);
+   // println(" "+angle);
+  } else if (theOscMessage.addrPattern().equals("/position"))
+  {
+     position. x = theOscMessage.get(1).floatValue()*width;
+     position. y =height - theOscMessage.get(0).floatValue()*height;
   }
-  
+
   if (theOscMessage.addrPattern().equals("/millumin/composition/cue"))
   {
     rectWidth += rectExtension;

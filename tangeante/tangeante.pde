@@ -9,12 +9,23 @@ PGraphics canvas;
 SyphonServer server;
 ArrayList<Circle> circles;
 
-void setup() { 
+import oscP5.*;
+import netP5.*;
+
+OscP5 oscP5;
+
+PVector position;
+
+void setup()
+{ 
   size(SCREEN_WIDTH, SCREEN_HEIGHT, P2D);
   canvas = createGraphics(SCREEN_WIDTH, SCREEN_HEIGHT, P2D);
   server = new SyphonServer(this, "baseProject");
   circles = new ArrayList<Circle>(); 
   initCircles();
+
+  oscP5 = new OscP5(this, 9999);
+  position = new PVector(width/2, height/2);
 }
 
 void draw() 
@@ -37,7 +48,7 @@ void draw()
         if ( i != j)
         {
           Circle testedCircle = circles.get(j);
-          circle.testAlignment(testedCircle, new PVector(mouseX, mouseY));
+          circle.testAlignment(testedCircle, position);
         }
       }
     }
@@ -45,7 +56,7 @@ void draw()
   for (int i = circles.size ()-1; i >= 0; i--)
   {
     Circle circle = circles.get(i);
-    circle.displayLine(new PVector(mouseX, mouseY));
+    circle.displayLine(position);
   }
 
   for (int i = circles.size ()-1; i >= 0; i--)
@@ -70,37 +81,57 @@ void keyPressed()
 void initCircles()
 {
   circles.clear();
-  /* circles.add(new Circle(new PVector(100, 200), 50));
-   circles.add(new Circle(new PVector(700, 500), 75));
-   circles.add(new Circle(new PVector(800, 700), 75));
-   circles.add(new Circle(new PVector(300, 300), 100));
-   circles.add(new Circle(new PVector(500, 600), 100));
-   circles.add(new Circle(new PVector(900, 300), 100));
-   circles.add(new Circle(new PVector(400, 80), 75));
-   circles.add(new Circle(new PVector(730, 100), 75));
-   circles.add(new Circle(new PVector(140, 640), 75));
-   circles.add(new Circle(new PVector(600, 280), 75));
-   circles.add(new Circle(new PVector(280, 500), 20));
-   circles.add(new Circle(new PVector(320, 680), 75));
-   circles.add(new Circle(new PVector(470, 420), 60));
-   circles.add(new Circle(new PVector(130, 400), 80));
-   circles.add(new Circle(new PVector(470, 215), 75));
-   circles.add(new Circle(new PVector(900, 550), 75));*/
+  circles.add(new Circle(new PVector(100, 200), 50));
+  circles.add(new Circle(new PVector(700, 500), 75));
+  circles.add(new Circle(new PVector(800, 700), 75));
+  circles.add(new Circle(new PVector(300, 300), 100));
+  circles.add(new Circle(new PVector(500, 600), 100));
+  circles.add(new Circle(new PVector(900, 300), 100));
+  circles.add(new Circle(new PVector(400, 80), 75));
+  circles.add(new Circle(new PVector(730, 100), 75));
+  circles.add(new Circle(new PVector(140, 640), 75));
+  circles.add(new Circle(new PVector(600, 280), 75));
+  circles.add(new Circle(new PVector(280, 500), 20));
+  circles.add(new Circle(new PVector(320, 680), 75));
+  circles.add(new Circle(new PVector(470, 420), 60));
+  circles.add(new Circle(new PVector(130, 400), 80));
+  circles.add(new Circle(new PVector(470, 215), 75));
+  circles.add(new Circle(new PVector(900, 550), 75));
 
-  int circleMaxSize = 100;
-  int circleMinSize = 50;
-  int circleMaxStep = 60;
-  float circlesDensity = 0.4;
-  for (int i = 0; i < width; i+= random (circleMaxSize, circleMaxStep))
-  {
-    for (int j = 0; j < height; j+= random (circleMaxSize, circleMaxStep))
-    {
-      float circleSize = random(circleMinSize-circlesDensity*circleMinSize, circleMaxSize );
-      if (circleSize > circleMinSize)
-      {
-        circles.add(new Circle(new PVector(i, j), circleSize));
-      }
-    }
-  }
+  /*int circleMaxSize = 100;
+   int circleMinSize = 50;
+   int circleMaxStep = 60;
+   float circlesDensity = 0.4;
+   for (int i = 0; i < width; i+= random (circleMaxSize, circleMaxStep))
+   {
+   for (int j = 0; j < height; j+= random (circleMaxSize, circleMaxStep))
+   {
+   float circleSize = random(circleMinSize-circlesDensity*circleMinSize, circleMaxSize );
+   if (circleSize > circleMinSize)
+   {
+   circles.add(new Circle(new PVector(i, j), circleSize));
+   }
+   }
+   }*/
 }
+
+void oscEvent(OscMessage theOscMessage)
+{
+  if (theOscMessage.addrPattern().equals("/rotation"))
+  {
+    // angle += theOscMessage.get(0).floatValue()/20.0;
+    // println(" "+angle);
+  } else if (theOscMessage.addrPattern().equals("/position"))
+  {
+    position. x = theOscMessage.get(1).floatValue()*width;
+    position. y =height - theOscMessage.get(0).floatValue()*height;
+  }
+
+  if (theOscMessage.addrPattern().equals("/millumin/composition/cue"))
+  {
+    /* rectWidth += rectExtension;
+     rectHeight += rectExtension;
+     timeRectWasExtended = millis();*/
+  }
+} 
 

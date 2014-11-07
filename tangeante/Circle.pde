@@ -65,9 +65,9 @@ class Circle
   {
     PVector selfVector = new PVector (endPoint.x-mousePosition.x, endPoint.y-mousePosition.y);
     PVector otherVector = new PVector (testedCircle.endPoint.x-mousePosition.x, testedCircle.endPoint.y-mousePosition.y);
-    if (PVector.angleBetween(selfVector, otherVector)< 3*PI/180.0)
+    if (PVector.angleBetween(selfVector, otherVector)< 5*PI/180.0)
     {
-      if (selfVector.mag() < 300 && otherVector.mag() < 300)
+      if (selfVector.mag() > otherVector.mag() && selfVector.mag() < 0.5*width)
       {
         shouldDraw = true;
         startApparitionDate = millis();
