@@ -65,16 +65,27 @@ class Circle
   {
     PVector selfVector = new PVector (endPoint.x-mousePosition.x, endPoint.y-mousePosition.y);
     PVector otherVector = new PVector (testedCircle.endPoint.x-mousePosition.x, testedCircle.endPoint.y-mousePosition.y);
-    if (PVector.angleBetween(selfVector, otherVector)< 5*PI/180.0)
+    if (selfVector.mag() > otherVector.mag() && isTangeantToCircle(testedCircle, mousePosition))
     {
-      if (selfVector.mag() > otherVector.mag() && selfVector.mag() < 0.5*width)
-      {
-        shouldDraw = true;
-        startApparitionDate = millis();
-        //restore when not blinking
-        //isLineAppearing = true;
-      }
+      shouldDraw = true;
+      startApparitionDate = millis();
+      //restore when not blinking
+      //isLineAppearing = true;
     }
+  }
+
+  boolean isTangeantToCircle(Circle testedCircle, PVector mousePosition)
+  {
+    PVector selfVector = new PVector (endPoint.x-mousePosition.x, endPoint.y-mousePosition.y);
+    PVector otherVector = new PVector (testedCircle.position.x-mousePosition.x, testedCircle.position.y-mousePosition.y);
+    float angle = PVector.angleBetween(selfVector, otherVector);
+    float h = otherVector.mag()*tan(angle);
+    println(h);
+    if  (h<testedCircle.radius/2.0)
+    {
+      return true;
+    }
+    return false;
   }
 }
 

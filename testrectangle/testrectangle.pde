@@ -18,14 +18,15 @@ OscP5 oscP5;
 import ddf.minim.*;
 Minim minim;
 AudioPlayer player;
+AudioPlayer player2;
 
 //General 
 float angle = 0;
 PVector position;
 Ball ball;
 Ball ball2;
-int rectWidth = 300; 
-int rectHeight = 200;
+int rectWidth = 500; 
+int rectHeight = 500;
 int originalRectWidth = rectWidth;
 int originalRectHeight = rectHeight;
 int rectExtension = 10;
@@ -39,14 +40,16 @@ void setup()
   server = new SyphonServer(this, "rectangle");
   oscP5 = new OscP5(this, 9999);
 
-  position = new PVector(0,0);
-  
+  position = new PVector(0, 0);
+
   balls = new ArrayList<Ball>(); 
-  balls.add  (new Ball(position.x, position.y, 20));
+  balls.add  (new Ball(position.x, position.y, 5));
+  balls.add  (new Ball(position.x+10, position.y+1, 30));
+    balls.add  (new Ball(position.x+1, position.y+10, 10));
 
   minim = new Minim(this);
-  player = minim.loadFile("bip.wav");
- 
+  player = minim.loadFile("blep.wav");
+  player2 = minim.loadFile("blip.wav");
 }
 void draw() 
 {
@@ -61,7 +64,7 @@ void draw()
   canvas.background(0);
   canvas.pushMatrix();
   canvas.rectMode(CENTER);
-  canvas.strokeWeight(2);
+  canvas.strokeWeight(10);
   canvas.noFill();
   canvas.translate(position.x, position.y);
   canvas.rotate(angle);
@@ -104,11 +107,11 @@ void oscEvent(OscMessage theOscMessage)
   if (theOscMessage.addrPattern().equals("/rotation"))
   {
     angle += theOscMessage.get(0).floatValue()/20.0;
-   // println(" "+angle);
+    // println(" "+angle);
   } else if (theOscMessage.addrPattern().equals("/position"))
   {
-     position. x = theOscMessage.get(1).floatValue()*width;
-     position. y =height - theOscMessage.get(0).floatValue()*height;
+    position. x = theOscMessage.get(1).floatValue()*width;
+    position. y =height - theOscMessage.get(0).floatValue()*height;
   }
 
   if (theOscMessage.addrPattern().equals("/millumin/composition/cue"))

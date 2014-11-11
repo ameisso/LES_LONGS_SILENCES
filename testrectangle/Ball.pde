@@ -86,8 +86,8 @@ class Ball
     if  (position.x > centerX+rectWidth/2.0-r || position.x < centerX - rectWidth/2.0 + r)
     {
       velocity.x *= -1;
-      player.rewind();
-      player.play();
+      player2.rewind();
+      player2.play();
     }
     if  (position.y > centerY+rectHeight/2.0-r || position.y < centerY - rectHeight/2.0 + r)
     {
