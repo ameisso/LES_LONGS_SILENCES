@@ -7,10 +7,10 @@ PGraphics canvas;
 SyphonServer server;
 
 float r = 300;
-float w = 20;
+float w = 40;
 float h = 10;
 float spaceBetweenBox = 10;
-int numberOfBox = 63;
+int numberOfBox = 38;
 int selectedBox = 0;
 
 float lastUpdate = -1;
@@ -35,7 +35,7 @@ void draw() {
   canvas.translate (width/2, height/2);
 
   float arclength = 0;
-  for (int i = 0; i < numberOfBox; i++) 
+  for (int i = 0; i < 10; i++) 
   {
     arclength += w/2.0 + spaceBetweenBox/2.0;
     float theta = arclength / r;     

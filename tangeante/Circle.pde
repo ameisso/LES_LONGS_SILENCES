@@ -42,7 +42,6 @@ class Circle
     Z.normalize();
     line.normalize();
     endPoint = line.cross(Z);
-    float add = 0;
     endPoint.normalize();
     endPoint.mult(radius/2);
     endPoint.add(position);

@@ -1,8 +1,12 @@
 //TODO : the balls shouldnt be affected by the movement of the rectangle 
-
-
 final int SCREEN_WIDTH  = 1024;
 final int SCREEN_HEIGHT = 768;
+
+
+//warning compute contraaction correctly
+final float RECTANGLE_CONTRACTION_DURATION_MS = 120 000;
+final float ORIGINAL_RECTANGLE_WIDTH = 800;
+final float ORIGINAL_RECTANGLE_HEIGHT = 300;
 
 //Syphon
 import codeanticode.syphon.*;
@@ -25,13 +29,17 @@ float angle = 0;
 PVector position;
 Ball ball;
 Ball ball2;
-int rectWidth = 500; 
-int rectHeight = 500;
-int originalRectWidth = rectWidth;
-int originalRectHeight = rectHeight;
-int rectExtension = 10;
+float rectWidth = ORIGINAL_RECTANGLE_WIDTH; 
+float rectHeight = ORIGINAL_RECTANGLE_HEIGHT;
+
+float currentRectWidth = ORIGINAL_RECTANGLE_WIDTH;
+float currentRectHeight = ORIGINAL_RECTANGLE_HEIGHT;
+
+int rectExtension = 30;
 float timeRectWasExtended = -1;
 ArrayList<Ball> balls;
+
+
 
 void setup() 
 {  
@@ -44,8 +52,6 @@ void setup()
 
   balls = new ArrayList<Ball>(); 
   balls.add  (new Ball(position.x, position.y, 5));
-  balls.add  (new Ball(position.x+10, position.y+1, 30));
-    balls.add  (new Ball(position.x+1, position.y+10, 10));
 
   minim = new Minim(this);
   player = minim.loadFile("blep.wav");
@@ -60,6 +66,18 @@ void draw()
     rectHeight -= rectExtension;
     timeRectWasExtended = -1;
   }
+
+
+  if  (currentRectWidth > 50)
+  {
+    currentRectWidth = map(millis(),0,RECTANGLE_CONTRACTION_DURATION_MS,ORIGINAL_RECTANGLE_WIDTH,0);
+  }
+
+  if  (currentRectHeight > 50)
+  {
+    currentRectHeight = map(millis(),0,RECTANGLE_CONTRACTION_DURATION_MS,ORIGINAL_RECTANGLE_HEIGHT,0);
+  }
+
   canvas.beginDraw();
   canvas.background(0);
   canvas.pushMatrix();
@@ -72,7 +90,7 @@ void draw()
   for (int i = balls.size ()-1; i >= 0; i--)
   {
     Ball ball = balls.get(i);
-    ball.checkCollisionwithRect(0, 0, originalRectWidth, originalRectHeight); 
+
     for (int j = balls.size ()-1; j >= 0; j--)
     {   
       if (i != j)
@@ -82,9 +100,9 @@ void draw()
       }
     }
     ball.update();
+    ball.checkCollisionwithRect(0, 0, currentRectWidth, currentRectHeight); 
     ball.display();
   }
-
 
   for (int i = 0; i < 1; i++)
   {
@@ -92,7 +110,7 @@ void draw()
     canvas.rotate(+random(-rotateForce, rotateForce));
     canvas.stroke(255);
     canvas.noFill();
-    canvas.rect (random(3), random(3), rectWidth, rectHeight);
+    canvas.rect (0, 0, currentRectWidth, currentRectHeight);
   }
 
   canvas.popMatrix();
@@ -104,6 +122,7 @@ void draw()
 
 void oscEvent(OscMessage theOscMessage)
 {
+  //println(theOscMessage.addrPattern());
   if (theOscMessage.addrPattern().equals("/rotation"))
   {
     angle += theOscMessage.get(0).floatValue()/20.0;
@@ -121,4 +140,10 @@ void oscEvent(OscMessage theOscMessage)
     timeRectWasExtended = millis();
   }
 } 
+
+void mouseDragged()
+{
+  position.x = mouseX; 
+  position.y = mouseY;
+}
 

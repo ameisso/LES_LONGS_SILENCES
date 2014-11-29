@@ -9,7 +9,7 @@ class Ball
   {
     position = new PVector(x, y);
     velocity = new PVector(x, y);
-    velocity.x=2;
+    velocity.x=3;
     velocity.y=1;
     r = r_;
     m = r*.1;
@@ -86,12 +86,26 @@ class Ball
     if  (position.x > centerX+rectWidth/2.0-r || position.x < centerX - rectWidth/2.0 + r)
     {
       velocity.x *= -1;
+      if ( position.x > centerX+rectWidth/2.0-r)//anti bump
+      {
+        position.x -= 1;
+      } else
+      {
+        position.x += 1;
+      }
       player2.rewind();
       player2.play();
     }
     if  (position.y > centerY+rectHeight/2.0-r || position.y < centerY - rectHeight/2.0 + r)
     {
       velocity.y *= -1;
+      if ( position.y > centerX+rectHeight/2.0-r)//anti bump
+      {
+        position.y -= 1;
+      } else
+      {
+        position.y += 1;
+      }
       player.rewind();
       player.play();
     }
