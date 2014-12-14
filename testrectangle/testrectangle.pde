@@ -3,10 +3,12 @@ final int SCREEN_WIDTH  = 1024;
 final int SCREEN_HEIGHT = 768;
 
 
-//warning compute contraaction correctly
-final float RECTANGLE_CONTRACTION_DURATION_MS = 120 000;
+final float RECTANGLE_CONTRACTION_DURATION_MS = 120000;
 final float ORIGINAL_RECTANGLE_WIDTH = 800;
 final float ORIGINAL_RECTANGLE_HEIGHT = 300;
+
+final float FINAL_RECTANGLE_WIDTH = 80;
+final float FINAL_RECTANGLE_HEIGHT = 30;
 
 //Syphon
 import codeanticode.syphon.*;
@@ -23,6 +25,12 @@ import ddf.minim.*;
 Minim minim;
 AudioPlayer player;
 AudioPlayer player2;
+
+//SENSOR 
+import processing.serial.*;
+Serial serial;
+int lf = 10;    // Linefeed in ASCII
+String myString = null;
 
 //General 
 float angle = 0;
@@ -56,10 +64,23 @@ void setup()
   minim = new Minim(this);
   player = minim.loadFile("blep.wav");
   player2 = minim.loadFile("blip.wav");
+  
+  //Serial 
+  println(Serial.list());
+  serial = new Serial(this, Serial.list()[5], 9600);
 }
 void draw() 
 {
-
+ while (serial.available() > 0) 
+ {
+    myString = serial.readStringUntil(lf);
+    if (myString != null) 
+    {
+      angle = float(myString);
+      println(myString);
+    }
+ }
+  
   if (millis() - timeRectWasExtended > 50 && timeRectWasExtended>0)
   {
     rectWidth -= rectExtension;
@@ -68,12 +89,12 @@ void draw()
   }
 
 
-  if  (currentRectWidth > 50)
+  if  (currentRectWidth > FINAL_RECTANGLE_WIDTH)
   {
     currentRectWidth = map(millis(),0,RECTANGLE_CONTRACTION_DURATION_MS,ORIGINAL_RECTANGLE_WIDTH,0);
   }
 
-  if  (currentRectHeight > 50)
+  if  (currentRectHeight > FINAL_RECTANGLE_HEIGHT)
   {
     currentRectHeight = map(millis(),0,RECTANGLE_CONTRACTION_DURATION_MS,ORIGINAL_RECTANGLE_HEIGHT,0);
   }
