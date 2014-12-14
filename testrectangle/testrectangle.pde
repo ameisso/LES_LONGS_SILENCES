@@ -2,13 +2,13 @@
 final int SCREEN_WIDTH  = 1024;
 final int SCREEN_HEIGHT = 768;
 
-
 final float RECTANGLE_CONTRACTION_DURATION_MS = 120000;
 final float ORIGINAL_RECTANGLE_WIDTH = 800;
 final float ORIGINAL_RECTANGLE_HEIGHT = 300;
 
-final float FINAL_RECTANGLE_WIDTH = 80;
-final float FINAL_RECTANGLE_HEIGHT = 30;
+final float FINAL_RECTANGLE_HEIGHT = 300;
+final float FINAL_RECTANGLE_WIDTH = 150;
+
 
 //Syphon
 import codeanticode.syphon.*;
@@ -46,7 +46,7 @@ float currentRectHeight = ORIGINAL_RECTANGLE_HEIGHT;
 int rectExtension = 30;
 float timeRectWasExtended = -1;
 ArrayList<Ball> balls;
-
+float ballSpeed = 1.0;
 
 
 void setup() 
@@ -68,6 +68,10 @@ void setup()
   //Serial 
   println(Serial.list());
   serial = new Serial(this, Serial.list()[5], 9600);
+
+  //remove the mute to have sounds 
+  // player.mute();
+  //player2.mute();
 }
 void draw() 
 {
@@ -83,20 +87,20 @@ void draw()
   
   if (millis() - timeRectWasExtended > 50 && timeRectWasExtended>0)
   {
-    rectWidth -= rectExtension;
-    rectHeight -= rectExtension;
+    currentRectWidth -= rectExtension;
+    currentRectHeight -= rectExtension;
     timeRectWasExtended = -1;
   }
 
 
   if  (currentRectWidth > FINAL_RECTANGLE_WIDTH)
   {
-    currentRectWidth = map(millis(),0,RECTANGLE_CONTRACTION_DURATION_MS,ORIGINAL_RECTANGLE_WIDTH,0);
+    currentRectWidth = map(millis(), 0, RECTANGLE_CONTRACTION_DURATION_MS, ORIGINAL_RECTANGLE_WIDTH, 0);
   }
 
   if  (currentRectHeight > FINAL_RECTANGLE_HEIGHT)
   {
-    currentRectHeight = map(millis(),0,RECTANGLE_CONTRACTION_DURATION_MS,ORIGINAL_RECTANGLE_HEIGHT,0);
+    currentRectHeight = map(millis(), 0, RECTANGLE_CONTRACTION_DURATION_MS, ORIGINAL_RECTANGLE_HEIGHT, 0);
   }
 
   canvas.beginDraw();
@@ -140,31 +144,4 @@ void draw()
   server.sendImage(canvas);
 }
 
-
-void oscEvent(OscMessage theOscMessage)
-{
-  //println(theOscMessage.addrPattern());
-  if (theOscMessage.addrPattern().equals("/rotation"))
-  {
-    angle += theOscMessage.get(0).floatValue()/20.0;
-    // println(" "+angle);
-  } else if (theOscMessage.addrPattern().equals("/position"))
-  {
-    position. x = theOscMessage.get(1).floatValue()*width;
-    position. y =height - theOscMessage.get(0).floatValue()*height;
-  }
-
-  if (theOscMessage.addrPattern().equals("/millumin/composition/cue"))
-  {
-    rectWidth += rectExtension;
-    rectHeight += rectExtension;
-    timeRectWasExtended = millis();
-  }
-} 
-
-void mouseDragged()
-{
-  position.x = mouseX; 
-  position.y = mouseY;
-}
 

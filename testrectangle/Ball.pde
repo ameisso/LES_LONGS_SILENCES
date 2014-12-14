@@ -2,21 +2,70 @@ class Ball
 {
   PVector position;
   PVector velocity;
-
+  PVector freezedVelocity;
+  PVector acceleration;
+  
   float r, m;
 
   Ball(float x, float y, float r_)
   {
     position = new PVector(x, y);
     velocity = new PVector(x, y);
-    velocity.x=3;
-    velocity.y=1;
+    acceleration = new PVector (0, 0);
+    freezedVelocity = new PVector (0, 0);
+    velocity.x=random(0, 1)*getRandomSign();
+    velocity.y=random(0, 1)*getRandomSign();
+
     r = r_;
     m = r*.1;
   }
 
+  int getRandomSign()
+  {
+    float number = random(-2, 2);
+    if (number < 0)
+    {
+      return -1;
+    }
+    return 1;
+  }
+
+  void freeze()
+  {
+    freezedVelocity.x = velocity.x;
+    freezedVelocity.y = velocity.y;
+    velocity.x = 0;
+    velocity.y = 0;
+    acceleration.x = 0;
+    acceleration.y = 0;
+  }
+
+  void restart()
+  {
+    velocity.x=freezedVelocity.x;
+    velocity.y=freezedVelocity.y;
+    velocity.x *= -1;
+  }
+  
   void update()
   {
+    if (velocity.x > 0) 
+    {
+      velocity.x += acceleration.x;
+    }
+    else
+    {
+      velocity.x -= acceleration.x;
+    }
+    if (velocity.y > 0)
+    {
+      velocity.y += acceleration.y;
+    }
+    else
+    {
+      velocity.y -= acceleration.y;
+    }
+
     position.add(velocity);
   }
 
@@ -89,7 +138,8 @@ class Ball
       if ( position.x > centerX+rectWidth/2.0-r)//anti bump
       {
         position.x -= 1;
-      } else
+      } 
+      else
       {
         position.x += 1;
       }
@@ -102,7 +152,8 @@ class Ball
       if ( position.y > centerX+rectHeight/2.0-r)//anti bump
       {
         position.y -= 1;
-      } else
+      } 
+      else
       {
         position.y += 1;
       }
@@ -112,7 +163,7 @@ class Ball
   }
   void display() {
     canvas.noStroke();
-    canvas.fill(50);
+    canvas.fill(255);
     //canvas.ellipse(position.x, position.y, r*2, r*2);
     canvas.rect(position.x, position.y, r*2, r*2);
   }
