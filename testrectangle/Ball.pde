@@ -13,8 +13,8 @@ class Ball
     velocity = new PVector(x, y);
     acceleration = new PVector (0, 0);
     freezedVelocity = new PVector (0, 0);
-    velocity.x=random(0, 1)*getRandomSign();
-    velocity.y=random(0, 1)*getRandomSign();
+    velocity.x=random(1, 2)*getRandomSign();
+    velocity.y=random(1, 2)*getRandomSign();
 
     r = r_;
     m = r*.1;

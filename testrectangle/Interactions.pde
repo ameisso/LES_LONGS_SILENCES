@@ -56,5 +56,9 @@ void keyPressed()
       ball.restart();
     }
   }
+  else if (key == 'a')
+  {
+     balls.add  (new Ball(0, 0, random(5,10)));
+  }
 }
 
